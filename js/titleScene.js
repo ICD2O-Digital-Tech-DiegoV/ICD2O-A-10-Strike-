@@ -5,12 +5,12 @@ class TitleScene extends Phaser.Scene {
   }
 
   init (data) {
-    this.cameras.main.setBackgroundColor('#13f0b9')
+    this.cameras.main.setBackgroundColor('#259B9F')
   }
 
   preload() {
     console.log('Title Scene')
-    this.load.image('titleSceneBackground', './assets/A-10.png')
+    this.load.image('titleSceneBackground', './assets/A-10image.png')
 
     // PLAY BUTTON
     this.load.image("playButton", "./assets/playButton.png");
@@ -30,7 +30,7 @@ class TitleScene extends Phaser.Scene {
     this.playButton = this.add.sprite(400,200,"playButton");
     this.playButton.setInteractive({useHandCursor : true});
     this.playButton.on( "pointerdown", () => {
-
+      this.scene.switch("gameScene");
     } );
 
     // Add text
