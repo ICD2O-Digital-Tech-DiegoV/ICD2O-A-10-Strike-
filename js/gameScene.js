@@ -3,6 +3,22 @@
 // Game scene code.
 
 class GameScene extends Phaser.Scene {
+ // creating the tanks
+  createTank () {
+    if (this.debounce) {return}
+    this.debounce = true
+    const tankXLocation = Math.floor(Math.random() * 1820) + 1 // random number for the x coordinate
+    let tankXvelocity = Math.floor(Math.random() * 50) + 1 // random number for the x velocity
+    tankXvelocity = tankXvelocity * Math.round(Math.random()) ? 1 : -1
+    const anTank = this.physics.add.sprite(tankXLocation, -100, 'tank')
+    anTank.body.velocity.y = 200
+    anTank.body.velocity.x = tankXvelocity
+    this.tankGroup.add(anTank)
+    setTimeout(()=>{this.debounce=false},600)
+  }
+  
+  
+
   constructor() {
     super({ key: 'gameScene' })
     this.background = null
@@ -86,18 +102,26 @@ class GameScene extends Phaser.Scene {
     if (keyEObj.isDown === true) {
       if (this.fireMissile === false) {
         this.fireMissile = true
-        const aNewMissile = this.physics.add.sprite(this.A10.x, this.A10.y, 'missile').setScale(0.06)
+        const aNewMissile = this.physics.add.sprite(this.A10.x, this.A10.y, 'missile').setScale(0.05)
         this.missileGroup.add(aNewMissile)
       }
     }
     if (keyEObj.isUp === true) {
       this.fireMissile = false
     }
+    // Movemt code for the missles
+    
+  this.missileGroup.children.each(function (item){
+      item.y = item.y - 15;
+      if (item.y < 0){
+        item.destroy();
+      }
+    })
     // Shooting Guns.
     if (keyQObj.isDown === true) {
       if (this.fireGun === false) {
         this.fireGun = true
-        const aNewGun = this.physics.add.sprite(this.A10.x, this.A10.y, 'gun').setScale(0.03)
+        const aNewGun = this.physics.add.sprite(this.A10.x, this.A10.y, 'gun').setScale(0.01)
         this.GunGroup.add(aNewGun)
       }
     }
@@ -105,6 +129,16 @@ class GameScene extends Phaser.Scene {
     if (keyQObj.isUp === true) {
       this.fireGun = false
     }
+    // Movemt code for the missles
+    this.GunGroup.children.each(function (item){
+      item.y = item.y - 15;
+      if (item.y < 0){
+        item.destroy();
+      }
+    })
+    // create agroup fo the tanks
+    this.tankGroup = this.add.group();
+    this.createTank();
   }
 }
 
