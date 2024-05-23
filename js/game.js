@@ -3,10 +3,12 @@
 import SplashScene from './splashScene.js';
 import TitleScene from './titleScene.js';
 import GameScene from './gameScene.js'
+import InstructScene from './instructScene.js'
 
 const splashScene = new SplashScene();
 const titleScene = new TitleScene();
 const gameScene = new GameScene();
+const instructScene = new InstructScene();
 
 const config = {
     type: Phaser.AUTO,
@@ -32,4 +34,5 @@ console.log(game);
 game.scene.add('splashScene', splashScene);
 game.scene.add('titleScene', titleScene);
 game.scene.add('gameScene', gameScene)
+game.scene.add('instructScene', instructScene)
 game.scene.start('splashScene');

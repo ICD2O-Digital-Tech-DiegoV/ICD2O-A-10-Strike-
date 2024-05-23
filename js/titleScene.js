@@ -14,6 +14,7 @@ class TitleScene extends Phaser.Scene {
 
     // PLAY BUTTON
     this.load.image("playButton", "./assets/playButton.png");
+    this.load.image("button", "./assets/playButtonclicked.png");
   }
 
   create(data) {
@@ -30,11 +31,22 @@ class TitleScene extends Phaser.Scene {
     this.playButton = this.add.sprite(400,200,"playButton");
     this.playButton.setInteractive({useHandCursor : true});
     this.playButton.on( "pointerdown", () => {
-      this.scene.switch("gameScene");
+      this.playButton.setTexture("button")
+      setTimeout(function(){this.scene.switch("gameScene")}.bind(this), 400);
     } );
 
     // Add text
     // this.titleSceneText = this.add.text(400,300, "A-10 Strike!")
+
+    // INSTRUCTION BUTTON
+    this.instructionsButton = this.add.text(500,400,"INSTRUCTIONS", {
+      fontSize: "32px",
+      backgroundColor: "f0550f",
+    });
+    this.instructionsButton.setInteractive({useHandCursor : true});
+    this.instructionsButton.on( "pointerdown", () => {
+      this.scene.switch("instructScene")
+    } );
   }
 
   update(time, delta) {

@@ -10,10 +10,13 @@ class GameScene extends Phaser.Scene {
     const tankXLocation = Math.floor(Math.random() * 800) + 1 // random number for the x coordinate
     let tankXvelocity = Math.floor(Math.random() * 1) + 1 // random number for the x velocity
     tankXvelocity = tankXvelocity * Math.round(Math.random()) ? 1 : -1
-    const anTank = this.physics.add.sprite(tankXLocation, -100, 'tank')
+
+    let selectedSprite = Math.random() > 0.3 ? 'tank' : 'AA' // random number for the tank
+    const anTank = this.physics.add.sprite(tankXLocation, -100, selectedSprite)
+    anTank.type = selectedSprite
     this.tankGroup.add(anTank)
     anTank.setScale(0.2,0.2)
-    anTank.setVelocityY(200)
+    anTank.setVelocityY(170)
     anTank.setVelocityX(tankXvelocity)
     setTimeout(() => { this.debounce = false }, 600)
   }
@@ -46,6 +49,7 @@ preload() {
   this.load.image('missile', './assets/missile.png')
   this.load.image('gun', './assets/Gun.png')
   this.load.image('tank', './assets/tank.png')
+  this.load.image("AA", "./assets/AA.png");
   
   // sound of Gun, missles and explosion
   this.load.audio('gun', '././assets/A10gunfire.mp3')
@@ -74,23 +78,35 @@ create(data) {
   this.tankGroup = this.physics.add.group();
   this.createTank();
   console.log(3)
-  // colisions between projectiles and tanks
+ 
+  // colisions between missiles and tanks
   this.physics.add.collider(this.missileGroup, this.tankGroup, function(missileCollide, tankCollide) {
     tankCollide.destroy()
     missileCollide.destroy()
     this.sound.play('explosion')
-    this.score = this.score + 1
+    if (tankCollide.type == "AA") {
+      this.score = this.score + 2
+    } 
+    else if (tankCollide.type == "tank") {
+      this.score = this.score + 1
+    }
     this.scoreText.setText('Score: ' + this.score)
     this.createTank()
     this.createTank()
   }.bind(this))
 
-  // colisions between projectiles and tanks
+  // colisions between Gun and tanks
   this.physics.add.collider(this.GunGroup, this.tankGroup, function(gunCollide, tankCollide) {
     tankCollide.destroy()
     gunCollide.destroy()
     this.sound.play('explosion')
-    this.score = this.score + 1
+    if (tankCollide.type == "AA") {
+      this.score = this.score + 2
+    } 
+    else if (tankCollide.type == "tank") {
+      this.score = this.score + 1
+    }
+    
     this.scoreText.setText('Score: ' + this.score)
     this.createTank()
     this.createTank()
@@ -120,9 +136,10 @@ update(time, delta) {
   const keyQObj = this.input.keyboard.addKey('Q')
 
   //the code for the movement it self.
-
+  this.A10.rotation = 0
   if (keyLeftObj.isDown === true) {
     this.A10.x -= 5
+    this.A10.rotation = - 0.3
     if (this.A10.x < 0) {
       this.A10.x = 800
     }
@@ -130,6 +147,7 @@ update(time, delta) {
 
   if (keyRightObj.isDown === true) {
     this.A10.x += 5
+    this.A10.rotation =  0.3
     if (this.A10.x > 800) {
       this.A10.x = 0
 
@@ -176,6 +194,7 @@ update(time, delta) {
     if (this.fireGun === false) {
       this.fireGun = true
       const aNewGun = this.physics.add.sprite(this.A10.x, this.A10.y, 'gun').setScale(0.02)
+      this.sound.add("gun").play()
       this.GunGroup.add(aNewGun)
     }
   }
